@@ -5,6 +5,8 @@ from PySide6.QtCore import QUrl
 from PySide6.QtQml import QQmlApplicationEngine
 from PySide6.QtWidgets import QApplication
 
+from backend import Backend
+
 if __name__ == "__main__":
     app = QApplication()
     engine = QQmlApplicationEngine()

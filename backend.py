@@ -1,8 +1,49 @@
-from PySide6.QtCore import Property, QObject, Slot
+from pathlib import Path
+from PySide6.QtCore import QObject, Slot, QStandardPaths
+from PySide6.QtGui import QColor
 from PySide6.QtQml import QmlElement
+
+QML_IMPORT_NAME = "backend.kgradience"
+QML_IMPORT_MAJOR_VERSION = 1
 
 
 @QmlElement
 class Backend(QObject):
     def __init__(self, parent: QObject | None = None) -> None:
         super().__init__(parent)
+        self._rules = self.load()
+
+    def load(self) -> dict[str, str | QColor]:
+        loc = QStandardPaths.StandardLocation.ConfigLocation
+        path = QStandardPaths.writableLocation(loc)
+        gtkPath = Path(path) / 'gtk-4.0' / 'gtk.css'
+        prefix = '@define-color'
+        result = {}
+        with open(gtkPath, 'r') as config:
+            for line in config:
+                line: str
+                line = line.strip()
+                if not line.startswith(prefix):
+                    continue
+                tokens = (line.removeprefix(prefix)
+                              .removesuffix(';')
+                              .strip().split())
+                name, rule = tokens[0], ' '.join(tokens[1:])
+                if not rule.startswith('@'):
+                    rule = QColor(rule)
+                result[name] = rule
+        return result
+
+    @Slot(str, result=str)
+    def getRuleText(self, name: str) -> str:
+        rule = self._rules[name]
+        if isinstance(rule, QColor):
+            return rule.name(QColor.NameFormat.HexArgb)
+        return rule
+
+    @Slot(str, result=QColor)
+    def getColor(self, name: str) -> QColor:
+        rule = self._rules[name]
+        while isinstance(rule, str):
+            rule = self._rules[rule]
+        return rule

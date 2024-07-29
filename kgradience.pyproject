@@ -1,6 +1,7 @@
 {
     "files": [
         "main.py",
+        "backend.py",
         "main.qml"
     ]
 }

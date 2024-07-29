@@ -1,7 +1,9 @@
 from pathlib import Path
-from PySide6.QtCore import QObject, Slot, QStandardPaths
+
+from PySide6.QtCore import QObject, QStandardPaths, Slot
 from PySide6.QtGui import QColor
 from PySide6.QtQml import QmlElement
+from tinycss2.color3 import RGBA, parse_color
 
 QML_IMPORT_NAME = "backend.kgradience"
 QML_IMPORT_MAJOR_VERSION = 1
@@ -30,9 +32,15 @@ class Backend(QObject):
                               .strip().split())
                 name, rule = tokens[0], ' '.join(tokens[1:])
                 if not rule.startswith('@'):
-                    rule = QColor(rule)
+                    rule = self._stringToColor(rule)
                 result[name] = rule
         return result
+
+    def _stringToColor(self, data: str) -> QColor:
+        c = parse_color(data)
+        if isinstance(c, RGBA):
+            return QColor.fromRgbF(c.red, c.green, c.blue, c.alpha)
+        return QColor()
 
     @Slot(str, result=str)
     def getRuleText(self, name: str) -> str:
@@ -42,8 +50,9 @@ class Backend(QObject):
         return rule
 
     @Slot(str, result=QColor)
-    def getColor(self, name: str) -> QColor:
-        rule = self._rules[name]
-        while isinstance(rule, str):
-            rule = self._rules[rule]
-        return rule
+    def getColor(self, color: str) -> QColor:
+        if isinstance(color, QColor):
+            return color
+        rule = self._rules.get(color.removeprefix('@'))
+        assert rule is not None
+        return self.getColor(rule)

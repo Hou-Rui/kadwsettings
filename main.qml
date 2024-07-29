@@ -40,10 +40,11 @@ Kirigami.ApplicationWindow {
                         Layout.fillWidth: true
                         Repeater {
                             model: 5
-                            FormCard.FormColorDelegate {
+                            ColorDelegate {
                                 required property int index
-                                text: `${modelItem.modelData}_${index + 1}`
-                                color: backend.getColor(text)
+                                text: `#${index + 1}`
+                                codeText: `${modelItem.modelData}_${index + 1}`
+                                color: backend.getColor(codeText)
                             }
                         }
                     }
@@ -67,10 +68,11 @@ Kirigami.ApplicationWindow {
             FormCard.FormCard {
                 Repeater {
                     model: ['accent_color', 'accent_bg_color', 'accent_fg_color', 'destructive_color', 'destructive_bg_color', 'destructive_fg_color', 'success_color', 'success_bg_color', 'success_fg_color', 'warning_color', 'warning_bg_color', 'warning_fg_color', 'error_color', 'error_bg_color', 'error_fg_color', 'window_bg_color', 'window_fg_color', 'view_bg_color', 'view_fg_color', 'headerbar_bg_color', 'headerbar_fg_color', 'headerbar_border_color', 'headerbar_backdrop_color', 'headerbar_shade_color', 'card_bg_color', 'card_fg_color', 'card_shade_color', 'dialog_bg_color', 'dialog_fg_color', 'popover_bg_color', 'popover_fg_color', 'shade_color', 'scrollbar_outline_color', 'sidebar_bg_color', 'sidebar_fg_color', 'sidebar_backdrop_color', 'sidebar_shade_color', 'secondary_sidebar_bg_color', 'secondary_sidebar_fg_color', 'secondary_sidebar_backdrop_color', 'secondary_sidebar_shade_color', 'thumbnail_bg_color', 'thumbnail_fg_color', 'popover_shade_color']
-                    FormCard.FormTextFieldDelegate {
+                    ColorDelegate {
                         required property string modelData
-                        label: modelData
-                        text: backend.getRuleText(modelData)
+                        codeText: modelData
+                        colorText: backend.getRuleText(modelData)
+                        color: backend.getColor(`@${codeText}`)
                     }
                 }
             }

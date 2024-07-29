@@ -83,6 +83,19 @@ Kirigami.ApplicationWindow {
         id: customStylesPage
         title: qsTr("Custom Styles")
         visible: false
+
+        ColumnLayout {
+            anchors.fill: parent
+
+            FormCard.FormHeader {
+                title: qsTr("Custom GTK4 CSS")
+            }
+            TextArea {
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+            }
+        }
+
     }
 
     component NavigationTabAction: Kirigami.Action {

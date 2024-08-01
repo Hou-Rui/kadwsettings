@@ -2,6 +2,7 @@
     "files": [
         "main.py",
         "backend.py",
-        "main.qml"
+        "main.qml",
+        "ColorDelegate.qml"
     ]
 }

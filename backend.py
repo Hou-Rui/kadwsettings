@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from pathlib import Path
 
 from PySide6.QtCore import QObject, QStandardPaths, Slot
@@ -9,50 +10,53 @@ QML_IMPORT_NAME = "backend.kgradience"
 QML_IMPORT_MAJOR_VERSION = 1
 
 
+@dataclass
+class ColorRule:
+    name: str
+    code: str
+
+
 @QmlElement
 class Backend(QObject):
     def __init__(self, parent: QObject | None = None) -> None:
         super().__init__(parent)
-        self._rules = self.load()
+        self._rules, self._custom = self.load()
 
-    def load(self) -> dict[str, str | QColor]:
+    def load(self) -> tuple[dict[str, ColorRule], str]:
         loc = QStandardPaths.StandardLocation.ConfigLocation
         path = QStandardPaths.writableLocation(loc)
         gtkPath = Path(path) / 'gtk-4.0' / 'gtk.css'
         prefix = '@define-color'
-        result = {}
+        result, custom = {}, ''
         with open(gtkPath, 'r') as config:
-            for line in config:
-                line: str
-                line = line.strip()
+            for raw in config:
+                line = raw.strip()
                 if not line.startswith(prefix):
+                    custom += raw + '\n'
                     continue
                 tokens = (line.removeprefix(prefix)
                               .removesuffix(';')
                               .strip().split())
                 name, rule = tokens[0], ' '.join(tokens[1:])
-                if not rule.startswith('@'):
-                    rule = self._stringToColor(rule)
-                result[name] = rule
-        return result
+                result[name] = ColorRule(name, rule)
+        return result, custom
 
-    def _stringToColor(self, data: str) -> QColor:
-        c = parse_color(data)
-        if isinstance(c, RGBA):
+    def _colorFromCode(self, data: str) -> QColor:
+        if isinstance(c := parse_color(data), RGBA):
             return QColor.fromRgbF(c.red, c.green, c.blue, c.alpha)
         return QColor()
 
     @Slot(str, result=str)
-    def getRuleText(self, name: str) -> str:
-        rule = self._rules[name]
-        if isinstance(rule, QColor):
-            return rule.name(QColor.NameFormat.HexArgb)
-        return rule
+    def getCode(self, name: str) -> str:
+        if rule := self._rules[name]:
+            return rule.code
+        return ''
 
     @Slot(str, result=QColor)
-    def getColor(self, color: str) -> QColor:
-        if isinstance(color, QColor):
-            return color
-        rule = self._rules.get(color.removeprefix('@'))
-        assert rule is not None
-        return self.getColor(rule)
+    def getColor(self, name: str) -> QColor:
+        code: str = self.getCode(name)
+        if not code.startswith('@'):
+            return self._colorFromCode(code)
+        if rule := self._rules.get(code.removeprefix('@')):
+            return self.getColor(rule)
+        return QColor()

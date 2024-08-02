@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Any
 
-from PySide6.QtCore import Property, QObject, QStandardPaths, Signal, Slot
+from PySide6.QtCore import QObject, QStandardPaths, Slot
 from PySide6.QtGui import QColor
 from PySide6.QtQml import QmlElement, QmlSingleton
 from tinycss2.color3 import RGBA, parse_color
@@ -41,6 +41,10 @@ class Backend(QObject):
         if isinstance(c := parse_color(code), RGBA):
             return QColor.fromRgbF(c.red, c.green, c.blue, c.alpha)
         return QColor()
+
+    @Slot(result=str)
+    def getCustomStyle(self) -> str:
+        return self._custom
 
     @Slot(str, result=str)
     def getCode(self, name: str) -> str:

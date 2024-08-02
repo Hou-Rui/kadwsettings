@@ -4,6 +4,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
+import backend.kgradience as KGradience
 import org.kde.kirigami as Kirigami
 import org.kde.kirigamiaddons.formcard as FormCard
 
@@ -75,7 +76,7 @@ Kirigami.ApplicationWindow {
         }
     }
 
-    Kirigami.Page {
+    Kirigami.ScrollablePage {
         id: customStylesPage
         title: qsTr("Custom Styles")
         visible: false
@@ -84,14 +85,15 @@ Kirigami.ApplicationWindow {
             anchors.fill: parent
 
             FormCard.FormHeader {
+                id: header
                 title: qsTr("Custom GTK4 CSS")
             }
-            TextArea {
-                Layout.fillHeight: true
-                Layout.fillWidth: true
+
+            FormCard.FormCard {
+                CustomStyleDelegate {
+                }
             }
         }
-
     }
 
     component NavigationTabAction: Kirigami.Action {

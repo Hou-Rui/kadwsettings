@@ -3,6 +3,8 @@
         "main.py",
         "backend.py",
         "main.qml",
-        "ColorDelegate.qml"
+        "ColorDelegate.qml",
+        "CustomStyleDelegate.qml",
+        "PresetSchema.js"
     ]
 }

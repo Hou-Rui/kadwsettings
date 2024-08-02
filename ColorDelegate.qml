@@ -28,13 +28,6 @@ FormCard.AbstractFormDelegate {
     contentItem: RowLayout {
         spacing: 0
 
-        Kirigami.Icon {
-            source: "color-picker"
-            Layout.rightMargin: Kirigami.Units.largeSpacing + Kirigami.Units.smallSpacing
-            implicitWidth: Kirigami.Units.iconSizes.small
-            implicitHeight: Kirigami.Units.iconSizes.small
-        }
-
         Controls.Label {
             text: root.text
             elide: Text.ElideRight

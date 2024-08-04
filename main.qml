@@ -8,10 +8,13 @@ import backend.kgradience as KGradience
 import org.kde.kirigami as Kirigami
 import org.kde.kirigamiaddons.formcard as FormCard
 
+import "PresetSchema.js" as PresetSchema
+
 Kirigami.ApplicationWindow {
     id: root
-    width: 800
-    height: 600
+    width: 40 * Kirigami.Units.gridUnit
+    minimumWidth: 30 * Kirigami.Units.gridUnit
+    height: 30 * Kirigami.Units.gridUnit
     visible: true
 
     pageStack.initialPage: paletteColorsPage
@@ -25,25 +28,26 @@ Kirigami.ApplicationWindow {
             implicitWidth: parent.width
 
             Repeater {
-                model: ["blue", "green", "yellow", "orange", "red", "purple", "brown", "light", "dark"]
+                model: PresetSchema.data.palette
 
                 ColumnLayout {
-                    id: modelItem
+                    id: palette
                     Layout.fillWidth: true
-                    required property string modelData
+                    required property var modelData
 
                     FormCard.FormHeader {
-                        title: modelItem.modelData
+                        title: palette.modelData.title
                     }
 
                     FormCard.FormCard {
                         Layout.fillWidth: true
                         Repeater {
-                            model: 5
+                            model: palette.modelData.n_shades
+
                             ColorDelegate {
                                 required property int index
-                                text: `#${index + 1}`
-                                name: `${modelItem.modelData}_${index + 1}`
+                                text: `${palette.modelData.title} #${index + 1}`
+                                name: `${palette.modelData.prefix}${index + 1}`
                             }
                         }
                     }
@@ -60,16 +64,27 @@ Kirigami.ApplicationWindow {
         ColumnLayout {
             implicitWidth: parent.width
 
-            FormCard.FormHeader {
-                title: qsTr("Header Color")
-            }
+            Repeater {
+                model: PresetSchema.data.groups
 
-            FormCard.FormCard {
-                Repeater {
-                    model: ['accent_color', 'accent_bg_color', 'accent_fg_color', 'destructive_color', 'destructive_bg_color', 'destructive_fg_color', 'success_color', 'success_bg_color', 'success_fg_color', 'warning_color', 'warning_bg_color', 'warning_fg_color', 'error_color', 'error_bg_color', 'error_fg_color', 'window_bg_color', 'window_fg_color', 'view_bg_color', 'view_fg_color', 'headerbar_bg_color', 'headerbar_fg_color', 'headerbar_border_color', 'headerbar_backdrop_color', 'headerbar_shade_color', 'card_bg_color', 'card_fg_color', 'card_shade_color', 'dialog_bg_color', 'dialog_fg_color', 'popover_bg_color', 'popover_fg_color', 'shade_color', 'scrollbar_outline_color', 'sidebar_bg_color', 'sidebar_fg_color', 'sidebar_backdrop_color', 'sidebar_shade_color', 'secondary_sidebar_bg_color', 'secondary_sidebar_fg_color', 'secondary_sidebar_backdrop_color', 'secondary_sidebar_shade_color', 'thumbnail_bg_color', 'thumbnail_fg_color', 'popover_shade_color']
-                    ColorDelegate {
-                        required property string modelData
-                        name: modelData
+                ColumnLayout {
+                    id: group
+                    required property var modelData
+
+                    FormCard.FormHeader {
+                        title: group.modelData.title
+                    }
+
+                    FormCard.FormCard {
+                        Repeater {
+                            model: group.modelData.variables
+
+                            ColorDelegate {
+                                required property var modelData
+                                text: modelData.title
+                                name: modelData.name
+                            }
+                        }
                     }
                 }
             }

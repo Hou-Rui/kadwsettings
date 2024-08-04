@@ -19,7 +19,6 @@ FormCard.AbstractFormDelegate {
         color = KGradience.Backend.getColor(name);
     }
 
-    icon.name: "color-picker"
     onClicked: {
         colorDialog.currentColor = color;
         colorDialog.open();
@@ -48,6 +47,7 @@ FormCard.AbstractFormDelegate {
         Controls.TextField {
             text: root.code
             Layout.rightMargin: Kirigami.Units.largeSpacing
+            onTextChanged: root.code = text
         }
 
         Rectangle {
@@ -69,8 +69,6 @@ FormCard.AbstractFormDelegate {
 
     ColorDialog {
         id: colorDialog
-        onAccepted: {
-            root.code = colorDialog.color.toString();
-        }
+        onAccepted: root.code = colorDialog.color.toString()
     }
 }

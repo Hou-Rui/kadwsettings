@@ -4,8 +4,10 @@ import backend.kgradience as KGradience
 import org.kde.kirigamiaddons.formcard as FormCard
 
 FormCard.AbstractFormDelegate {
-    contentItem: Controls.TextArea {
-		text: KGradience.Backend.getCustomStyle()
-		font.family: "monospace"
+    contentItem: Controls.ScrollView {
+		Controls.TextArea {
+			text: KGradience.Backend.getCustomStyle()
+			font.family: "monospace"
+		}
 	}
 }

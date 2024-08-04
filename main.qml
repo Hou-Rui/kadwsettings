@@ -76,22 +76,15 @@ Kirigami.ApplicationWindow {
         }
     }
 
-    Kirigami.ScrollablePage {
+    Kirigami.Page {
         id: customStylesPage
         title: qsTr("Custom Styles")
         visible: false
-
-        ColumnLayout {
+        ScrollView {
             anchors.fill: parent
-
-            FormCard.FormHeader {
-                id: header
-                title: qsTr("Custom GTK4 CSS")
-            }
-
-            FormCard.FormCard {
-                CustomStyleDelegate {
-                }
+            TextArea {
+                text: KGradience.Backend.getCustomStyle()
+                font.family: "monospace"
             }
         }
     }

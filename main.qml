@@ -19,20 +19,26 @@ Kirigami.ApplicationWindow {
 
     pageStack.initialPage: paletteColorsPage
 
+
+    Kirigami.Action {
+        id: applyAction
+        icon.name: "dialog-ok-apply"
+        text: qsTr("Apply")
+    }
+
+
     Kirigami.ScrollablePage {
         id: paletteColorsPage
         title: qsTr("Palette Colors")
         visible: false
+        actions: [applyAction]
 
         ColumnLayout {
-            implicitWidth: parent.width
-
             Repeater {
                 model: PresetSchema.data.palette
 
                 ColumnLayout {
                     id: palette
-                    Layout.fillWidth: true
                     required property var modelData
 
                     FormCard.FormHeader {
@@ -40,7 +46,6 @@ Kirigami.ApplicationWindow {
                     }
 
                     FormCard.FormCard {
-                        Layout.fillWidth: true
                         Repeater {
                             model: palette.modelData.n_shades
 
@@ -60,10 +65,9 @@ Kirigami.ApplicationWindow {
         id: namedColorsPage
         title: qsTr("Named Colors")
         visible: false
+        actions: [applyAction]
 
         ColumnLayout {
-            implicitWidth: parent.width
-
             Repeater {
                 model: PresetSchema.data.groups
 
@@ -91,15 +95,28 @@ Kirigami.ApplicationWindow {
         }
     }
 
-    Kirigami.Page {
+    Kirigami.ScrollablePage {
         id: customStylesPage
         title: qsTr("Custom Styles")
         visible: false
-        ScrollView {
-            anchors.fill: parent
-            TextArea {
-                text: KGradience.Backend.getCustomStyle()
-                font.family: "monospace"
+        actions: [applyAction]
+
+        ColumnLayout {
+            FormCard.FormHeader {
+                title: qsTr("Custom GTK 4 Styles")
+            }
+
+            FormCard.FormCard {
+                FormCard.AbstractFormDelegate {
+                    contentItem: TextArea {
+                        text: KGradience.Backend.getCustomStyle()
+                        font.family: "monospace"
+                        activeFocusOnTab: false
+                        wrapMode: TextEdit.Wrap
+                        textFormat: TextEdit.PlainText
+                        onEditingFinished: KGradience.Backend.setCustomStyle(text)
+                    }
+                }
             }
         }
     }

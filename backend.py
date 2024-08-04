@@ -27,7 +27,7 @@ class Backend(QObject):
             for raw in config:
                 line = raw.strip()
                 if not line.startswith(prefix):
-                    custom += raw + '\n'
+                    custom += raw
                     continue
                 tokens = (line.removeprefix(prefix)
                               .removesuffix(';')
@@ -45,6 +45,10 @@ class Backend(QObject):
     @Slot(result=str)
     def getCustomStyle(self) -> str:
         return self._custom
+
+    @Slot(str)
+    def setCustomStyle(self, custom: str) -> None:
+        self._custom = custom
 
     @Slot(str, result=str)
     def getCode(self, name: str) -> str:

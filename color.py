@@ -22,18 +22,19 @@ class ColorRule(QObject):
         self._code = code
         self._parent = parent
 
-    def setCode(self, newCode: str) -> None:
-        if newCode != self._code:
-            self._code = newCode
-            self.colorChanged.emit()
-
     @Property(str, notify=nameChanged)
     def name(self) -> str:
         return self._name
 
-    @Property(str, notify=colorChanged, fset=setCode)
+    @Property(str, notify=colorChanged)
     def code(self) -> str:
         return self._code
+
+    @code.setter
+    def code(self, newCode: str) -> None:
+        if newCode != self._code:
+            self._code = newCode
+            self.colorChanged.emit()
 
     @Property(QColor, notify=colorChanged)
     def color(self) -> QColor:

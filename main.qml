@@ -24,6 +24,7 @@ Kirigami.ApplicationWindow {
         id: applyAction
         icon.name: "dialog-ok-apply"
         text: qsTr("Apply")
+        onTriggered: KGradience.Backend.save()
     }
 
 
@@ -51,8 +52,9 @@ Kirigami.ApplicationWindow {
 
                             ColorDelegate {
                                 required property int index
-                                text: `${palette.modelData.title} #${index + 1}`
-                                name: `${palette.modelData.prefix}${index + 1}`
+                                readonly property int shade: index + 1
+                                text: `${palette.modelData.title} #${shade}`
+                                name: palette.modelData.prefix + shade
                             }
                         }
                     }
@@ -109,11 +111,17 @@ Kirigami.ApplicationWindow {
             FormCard.FormCard {
                 FormCard.AbstractFormDelegate {
                     contentItem: TextArea {
+                        id: customTextArea
                         text: KGradience.Backend.custom
                         font.family: "monospace"
                         activeFocusOnTab: false
                         wrapMode: TextEdit.Wrap
                         textFormat: TextEdit.PlainText
+                        Binding {
+                            target: KGradience.Backend
+                            property: "custom"
+                            value: customTextArea.text
+                        }
                     }
                 }
             }

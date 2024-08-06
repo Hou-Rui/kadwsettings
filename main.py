@@ -7,6 +7,8 @@ from PySide6.QtWidgets import QApplication
 
 from backend import Backend
 
+assert Backend
+
 if __name__ == "__main__":
     app = QApplication()
     engine = QQmlApplicationEngine()

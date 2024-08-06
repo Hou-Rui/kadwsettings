@@ -1,5 +1,5 @@
 import QtQuick
-import QtQuick.Controls as Controls
+import QtQuick.Controls
 import QtQuick.Layouts
 import Qt.labs.platform
 
@@ -11,23 +11,17 @@ FormCard.AbstractFormDelegate {
     id: root
 
     required property string name
-    property string code: KGradience.Backend.getCode(name)
-    property color color: KGradience.Backend.getColor(name)
-
-    onCodeChanged: {
-        KGradience.Backend.setCode(name, code);
-        color = KGradience.Backend.getColor(name);
-    }
+    property var rule: KGradience.Backend.getColorRule(name)
 
     onClicked: {
-        colorDialog.currentColor = color;
+        colorDialog.currentColor = rule.color;
         colorDialog.open();
     }
 
     contentItem: RowLayout {
         spacing: 0
 
-        Controls.Label {
+        Label {
             text: root.text
             elide: Text.ElideRight
             wrapMode: Text.Wrap
@@ -35,7 +29,7 @@ FormCard.AbstractFormDelegate {
             Layout.rightMargin: Kirigami.Units.largeSpacing
         }
 
-        Controls.Label {
+        Label {
             Layout.fillWidth: true
             color: "gray"
             text: root.name
@@ -44,16 +38,21 @@ FormCard.AbstractFormDelegate {
             maximumLineCount: 2
         }
 
-        Controls.TextField {
-            text: root.code
+        TextField {
+            id: codeField
+            text: root.rule.code
             Layout.rightMargin: Kirigami.Units.largeSpacing
-            onTextChanged: root.code = text
+            Binding {
+                target: root.rule
+                property: 'code'
+                value: codeField.text
+            }
         }
 
         Rectangle {
             id: colorRect
             radius: height
-            color: root.color
+            color: root.rule.color
             Layout.preferredWidth: Kirigami.Units.iconSizes.small
             Layout.preferredHeight: Kirigami.Units.iconSizes.small
             Layout.rightMargin: Kirigami.Units.largeSpacing
@@ -69,6 +68,8 @@ FormCard.AbstractFormDelegate {
 
     ColorDialog {
         id: colorDialog
-        onAccepted: root.code = colorDialog.color.toString()
+        onAccepted: {
+            root.rule.code = colorDialog.color.toString();
+        }
     }
 }

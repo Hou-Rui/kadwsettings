@@ -2,6 +2,7 @@
     "files": [
         "main.py",
         "backend.py",
+        "color.py",
         "main.qml",
         "ColorDelegate.qml",
         "PresetSchema.js"

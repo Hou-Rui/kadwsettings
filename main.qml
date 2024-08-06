@@ -96,7 +96,7 @@ Kirigami.ApplicationWindow {
     }
 
     Kirigami.ScrollablePage {
-        id: customStylesPage
+        id: customStylePage
         title: qsTr("Custom Styles")
         visible: false
         actions: [applyAction]
@@ -109,12 +109,11 @@ Kirigami.ApplicationWindow {
             FormCard.FormCard {
                 FormCard.AbstractFormDelegate {
                     contentItem: TextArea {
-                        text: KGradience.Backend.getCustomStyle()
+                        text: KGradience.Backend.custom
                         font.family: "monospace"
                         activeFocusOnTab: false
                         wrapMode: TextEdit.Wrap
                         textFormat: TextEdit.PlainText
-                        onEditingFinished: KGradience.Backend.setCustomStyle(text)
                     }
                 }
             }
@@ -150,7 +149,7 @@ Kirigami.ApplicationWindow {
             },
             NavigationTabAction {
                 iconName: "code-context"
-                page: customStylesPage
+                page: customStylePage
             }
         ]
     }

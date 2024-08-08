@@ -13,34 +13,37 @@ FormCard.AbstractFormDelegate {
     required property string name
     property var rule: KGradience.Backend.getColorRule(name)
 
-    onClicked: {
-        colorDialog.currentColor = rule.color;
-        colorDialog.open();
-    }
-
     contentItem: RowLayout {
         spacing: 0
 
-        Label {
-            text: root.text
-            elide: Text.ElideRight
-            wrapMode: Text.Wrap
-            maximumLineCount: 2
+        ColumnLayout {
             Layout.rightMargin: Kirigami.Units.largeSpacing
+            Layout.fillWidth: true
+            Label {
+                text: root.text
+                elide: Text.ElideRight
+                Layout.fillWidth: true
+            }
+            Label {
+                text: root.rule.name
+                color: Kirigami.Theme.disabledTextColor
+                elide: Text.ElideRight
+                Layout.fillWidth: true
+            }
         }
 
         Label {
-            Layout.fillWidth: true
-            color: "gray"
-            text: root.name
-            elide: Text.ElideRight
-            wrapMode: Text.Wrap
-            maximumLineCount: 2
+            visible: !editCodeButton.checked
+            text: root.rule.code
+            color: Kirigami.Theme.disabledTextColor
+            Layout.rightMargin: Kirigami.Units.largeSpacing
         }
 
         TextField {
             id: codeField
+            visible: editCodeButton.checked
             text: root.rule.code
+            Layout.fillWidth: true
             Layout.rightMargin: Kirigami.Units.largeSpacing
             Binding {
                 target: root.rule
@@ -55,14 +58,22 @@ FormCard.AbstractFormDelegate {
             color: root.rule.color
             Layout.preferredWidth: Kirigami.Units.iconSizes.small
             Layout.preferredHeight: Kirigami.Units.iconSizes.small
+            Layout.rightMargin: Kirigami.Units.largeSpacing * 2
+        }
+
+        Button {
+            id: editCodeButton
+            checkable: true
+            icon.name: "edit"
             Layout.rightMargin: Kirigami.Units.largeSpacing
         }
 
-        FormCard.FormArrow {
-            Layout.leftMargin: Kirigami.Units.smallSpacing
-            Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
-            direction: Qt.RightArrow
-            visible: root.background.visible
+        Button {
+            icon.name: "color-picker"
+            onClicked: {
+                colorDialog.currentColor = root.rule.color;
+                colorDialog.open();
+            }
         }
     }
 

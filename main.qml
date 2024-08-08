@@ -19,7 +19,6 @@ Kirigami.ApplicationWindow {
 
     pageStack.initialPage: paletteColorsPage
 
-
     Kirigami.Action {
         id: applyAction
         icon.name: "dialog-ok-apply"
@@ -27,35 +26,32 @@ Kirigami.ApplicationWindow {
         onTriggered: KGradience.Backend.save()
     }
 
-
-    Kirigami.ScrollablePage {
+    FormCard.FormCardPage {
         id: paletteColorsPage
         title: qsTr("Palette Colors")
         visible: false
         actions: [applyAction]
 
-        ColumnLayout {
-            Repeater {
-                model: PresetSchema.data.palette
+        Repeater {
+            model: PresetSchema.data.palette
 
-                ColumnLayout {
-                    id: palette
-                    required property var modelData
+            ColumnLayout {
+                id: palette
+                required property var modelData
 
-                    FormCard.FormHeader {
-                        title: palette.modelData.title
-                    }
+                FormCard.FormHeader {
+                    title: palette.modelData.title
+                }
 
-                    FormCard.FormCard {
-                        Repeater {
-                            model: palette.modelData.n_shades
+                FormCard.FormCard {
+                    Repeater {
+                        model: palette.modelData.n_shades
 
-                            ColorDelegate {
-                                required property int index
-                                readonly property int shade: index + 1
-                                text: `${palette.modelData.title} #${shade}`
-                                name: palette.modelData.prefix + shade
-                            }
+                        ColorDelegate {
+                            required property int index
+                            readonly property int shade: index + 1
+                            text: `${palette.modelData.title} #${shade}`
+                            name: palette.modelData.prefix + shade
                         }
                     }
                 }
@@ -63,33 +59,40 @@ Kirigami.ApplicationWindow {
         }
     }
 
-    Kirigami.ScrollablePage {
+    FormCard.FormCardPage {
         id: namedColorsPage
         title: qsTr("Named Colors")
         visible: false
         actions: [applyAction]
 
-        ColumnLayout {
-            Repeater {
-                model: PresetSchema.data.groups
+        Repeater {
+            model: PresetSchema.data.groups
 
-                ColumnLayout {
-                    id: group
-                    required property var modelData
+            ColumnLayout {
+                id: group
+                required property var modelData
 
-                    FormCard.FormHeader {
-                        title: group.modelData.title
-                    }
+                FormCard.FormHeader {
+                    id: titleHeader
+                    title: group.modelData.title
+                    Layout.bottomMargin: 0
+                }
 
-                    FormCard.FormCard {
-                        Repeater {
-                            model: group.modelData.variables
+                FormCard.FormSectionText {
+                    text: group.modelData.description
+                    leftPadding: titleHeader.leftPadding
+                    rightPadding: titleHeader.rightPadding
+                    Layout.topMargin: 0
+                }
 
-                            ColorDelegate {
-                                required property var modelData
-                                text: modelData.title
-                                name: modelData.name
-                            }
+                FormCard.FormCard {
+                    Repeater {
+                        model: group.modelData.variables
+
+                        ColorDelegate {
+                            required property var modelData
+                            text: modelData.title
+                            name: modelData.name
                         }
                     }
                 }
@@ -97,31 +100,29 @@ Kirigami.ApplicationWindow {
         }
     }
 
-    Kirigami.ScrollablePage {
+    FormCard.FormCardPage {
         id: customStylePage
         title: qsTr("Custom Styles")
         visible: false
         actions: [applyAction]
 
-        ColumnLayout {
-            FormCard.FormHeader {
-                title: qsTr("Custom GTK 4 Styles")
-            }
+        FormCard.FormHeader {
+            title: qsTr("Custom GTK 4 Styles")
+        }
 
-            FormCard.FormCard {
-                FormCard.AbstractFormDelegate {
-                    contentItem: TextArea {
-                        id: customTextArea
-                        text: KGradience.Backend.custom
-                        font.family: "monospace"
-                        activeFocusOnTab: false
-                        wrapMode: TextEdit.Wrap
-                        textFormat: TextEdit.PlainText
-                        Binding {
-                            target: KGradience.Backend
-                            property: "custom"
-                            value: customTextArea.text
-                        }
+        FormCard.FormCard {
+            FormCard.AbstractFormDelegate {
+                contentItem: TextArea {
+                    id: customTextArea
+                    text: KGradience.Backend.custom
+                    font.family: "monospace"
+                    activeFocusOnTab: false
+                    wrapMode: TextEdit.Wrap
+                    textFormat: TextEdit.PlainText
+                    Binding {
+                        target: KGradience.Backend
+                        property: "custom"
+                        value: customTextArea.text
                     }
                 }
             }

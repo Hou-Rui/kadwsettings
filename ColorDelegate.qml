@@ -58,7 +58,7 @@ FormCard.AbstractFormDelegate {
             color: root.rule.color
             Layout.preferredWidth: Kirigami.Units.iconSizes.small
             Layout.preferredHeight: Kirigami.Units.iconSizes.small
-            Layout.rightMargin: Kirigami.Units.largeSpacing * 2
+            Layout.rightMargin: Kirigami.Units.largeSpacing
         }
 
         Button {

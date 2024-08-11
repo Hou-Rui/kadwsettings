@@ -26,11 +26,23 @@ Kirigami.ApplicationWindow {
         onTriggered: KGradience.Backend.save()
     }
 
+    Kirigami.Action {
+        id: loadPresetAction
+        icon.name: "list-add"
+        text: qsTr("Load Preset")
+    }
+
+    Kirigami.Action {
+        id: savePresetAction
+        icon.name: "document-save"
+        text: qsTr("Save Preset")
+    }
+
     FormCard.FormCardPage {
         id: paletteColorsPage
         title: qsTr("Palette Colors")
         visible: false
-        actions: [applyAction]
+        actions: [loadPresetAction, savePresetAction, applyAction]
 
         Repeater {
             model: PresetSchema.data.palette
@@ -63,7 +75,7 @@ Kirigami.ApplicationWindow {
         id: namedColorsPage
         title: qsTr("Named Colors")
         visible: false
-        actions: [applyAction]
+        actions: [loadPresetAction, savePresetAction, applyAction]
 
         Repeater {
             model: PresetSchema.data.groups
@@ -104,7 +116,7 @@ Kirigami.ApplicationWindow {
         id: customStylePage
         title: qsTr("Custom Styles")
         visible: false
-        actions: [applyAction]
+        actions: [loadPresetAction, savePresetAction, applyAction]
 
         FormCard.FormHeader {
             title: qsTr("Custom GTK 4 Styles")

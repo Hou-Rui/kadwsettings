@@ -77,4 +77,3 @@ class Backend(BackendBase, QObject):
     @custom.setter
     def custom(self, custom: str) -> None:
         self._custom = custom
-

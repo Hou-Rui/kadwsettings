@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=KDE Adwaita Settings
+GenericName=KDE Adwaita Settings
+Comment=Adwaita Settings for KDE
+Keywords=adwaita settings gnome libadwaita
+Categories=Utility
+Exec=kadwsettings %u
+Icon=kadwsettings
+StartupWMClass=kadwsettings
+Terminal=false

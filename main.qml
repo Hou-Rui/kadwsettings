@@ -4,7 +4,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
-import backend.kgradience as KGradience
+import backend.kadwsettings as KAdwSettings
 import org.kde.kirigami as Kirigami
 import org.kde.kirigamiaddons.formcard as FormCard
 
@@ -23,7 +23,7 @@ Kirigami.ApplicationWindow {
         id: applyAction
         icon.name: "dialog-ok-apply"
         text: qsTr("Apply")
-        onTriggered: KGradience.Backend.save()
+        onTriggered: KAdwSettings.Backend.save()
     }
 
     Kirigami.Action {
@@ -123,21 +123,7 @@ Kirigami.ApplicationWindow {
         }
 
         FormCard.FormCard {
-            FormCard.AbstractFormDelegate {
-                contentItem: TextArea {
-                    id: customTextArea
-                    text: KGradience.Backend.custom
-                    font.family: "monospace"
-                    activeFocusOnTab: false
-                    wrapMode: TextEdit.Wrap
-                    textFormat: TextEdit.PlainText
-                    Binding {
-                        target: KGradience.Backend
-                        property: "custom"
-                        value: customTextArea.text
-                    }
-                }
-            }
+            CustomStylesDelegate {}
         }
     }
 

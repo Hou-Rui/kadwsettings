@@ -3,7 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import Qt.labs.platform
 
-import backend.kgradience as KGradience
+import backend.kadwsettings as KAdwSettings
 import org.kde.kirigamiaddons.formcard as FormCard
 import org.kde.kirigami as Kirigami
 
@@ -11,7 +11,7 @@ FormCard.AbstractFormDelegate {
     id: root
 
     required property string name
-    property var rule: KGradience.Backend.getColorRule(name)
+    property var rule: KAdwSettings.Backend.getColorRule(name)
 
     contentItem: RowLayout {
         spacing: 0

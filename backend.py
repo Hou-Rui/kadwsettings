@@ -8,7 +8,7 @@ from tinycss2.color3 import RGBA, parse_color
 
 from color import BackendBase, ColorRule
 
-QML_IMPORT_NAME = "backend.kgradience"
+QML_IMPORT_NAME = "backend.kadwsettings"
 QML_IMPORT_MAJOR_VERSION = 1
 
 
@@ -17,7 +17,7 @@ QML_IMPORT_MAJOR_VERSION = 1
 class Backend(BackendBase, QObject):
     customChanged: Any = Signal()
     defineColorPrefix = '@define-color'
-    internalPrefix = '/* KGradience:'
+    internalPrefix = f'/* KAdwSettings:'
 
     def __init__(self, parent=None) -> None:
         super().__init__(parent)

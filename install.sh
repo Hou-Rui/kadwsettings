@@ -19,6 +19,6 @@ for size in icons/*; do
 done
 
 echo '#!/bin/sh' >"$TMPRUN"
-echo "python3 \"$SHARE_DIR/main.py\"" >> "$TMPRUN"
+echo "python \"$SHARE_DIR/main.py\"" >> "$TMPRUN"
 install -Dm 755 "$TMPRUN" -T "$PREFIX/bin/$PROJECT"
 rm "$TMPRUN"

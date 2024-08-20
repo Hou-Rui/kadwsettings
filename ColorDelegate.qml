@@ -64,7 +64,7 @@ FormCard.AbstractFormDelegate {
         Button {
             id: editCodeButton
             checkable: true
-            icon.name: "edit"
+            icon.name: "document-edit"
             Layout.rightMargin: Kirigami.Units.largeSpacing
         }
 

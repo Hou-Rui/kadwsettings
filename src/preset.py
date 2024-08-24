@@ -1,7 +1,9 @@
+import json
 from pathlib import Path
-from typing import override
+from typing import Iterator, override
 
-from PySide6.QtCore import Property, QObject, QStandardPaths, Signal, Slot
+from PySide6.QtCore import (Property, QObject, QStandardPaths, QUrl, Signal,
+                            Slot)
 from PySide6.QtGui import QColor
 from PySide6.QtQml import QmlElement, QmlSingleton
 from tinycss2.color3 import RGBA, parse_color
@@ -21,25 +23,25 @@ PREFIX_INTERNAL = '/* KAdwSettings:'
 class Preset(Resolver, QObject):
     customChanged = Signal()
     schemaChanged = Signal()
+    errorHappened = Signal(str)
 
     def __init__(self, parent=None) -> None:
         super().__init__(parent)
         self._schema = Schema(self)
         self._rules: dict[str, Rule] = {}
-        self._custom = ''
+        self._custom: str = ''
         self._initRules()
         self.loadCss()
 
     def _initRules(self) -> None:
-        def _genNames():
-            data = self._schema.data()
+        def _genNames(data: dict[str, list]) -> Iterator[str]:
             for group in data['groups']:
                 for variable in group['variables']:
                     yield variable['name']
             for palette in data['palette']:
                 for n in range(1, palette['n_shades'] + 1):
                     yield f"{palette['prefix']}{n}"
-        for name in _genNames():
+        for name in _genNames(self._schema.data()):
             self._rules[name] = Rule(name, 'transparent', self)
 
     @Slot()
@@ -74,6 +76,32 @@ class Preset(Resolver, QObject):
         loc = QStandardPaths.StandardLocation.ConfigLocation
         path = QStandardPaths.writableLocation(loc)
         return Path(path) / 'gtk-4.0' / 'gtk.css'
+
+    @Slot(str)
+    def loadJson(self, path: str) -> None:
+        def _genRules(data) -> Iterator[tuple[str, str]]:
+            assert isinstance(data, dict)
+            assert isinstance(vars := data['variables'], dict)
+            for name, code in vars.items():
+                assert isinstance(name, str) and isinstance(code, str)
+                yield name, code
+            assert isinstance(palette := data['palette'], dict)
+            for prefix, shades in palette.items():
+                assert isinstance(shades, dict)
+                for n, code in shades.items():
+                    assert isinstance(code, str)
+                    yield f'{prefix}{n}', code
+        try:
+            with open(QUrl(path).path(), 'r') as input:
+                for name, code in _genRules(json.load(input)):
+                    self._rules[name].code = code  # type: ignore
+        except (ValueError, KeyError, AssertionError) as e:
+            msg = self.tr('Load preset failed: {}'.format(e))
+            self.errorHappened.emit(msg)
+
+    @Slot(str)
+    def saveJson(self, path: str) -> None:
+        pass
 
     @override
     def resolve(self, code: str) -> QColor:

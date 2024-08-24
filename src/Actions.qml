@@ -7,7 +7,9 @@ import kadwsettings.backend as KAdwSettings
 import org.kde.kirigami as Kirigami
 
 Item {
-    readonly property var common: [apply, loadPreset, savePreset]
+    id: root
+    readonly property list<Kirigami.Action> common: [apply, loadPreset, savePreset]
+    readonly property list<string> nameFilter: ["Preset files (*.json)", "All files (*)"]
 
     Kirigami.Action {
         id: apply
@@ -26,7 +28,8 @@ Item {
     FileDialog {
         id: loadPresetDialog
         title: qsTr("Load Preset File")
-        nameFilters: [ "Preset files (*.json)", "All files (*)" ]
+        nameFilters: root.nameFilter
+        onAccepted: KAdwSettings.Preset.loadJson(file)
     }
 
     Kirigami.Action {
@@ -38,6 +41,9 @@ Item {
 
     FileDialog {
         id: savePresetDialog
-        defaultSuffix: "json"
+        title: qsTr("Save Preset File")
+        nameFilters: root.nameFilter
+        fileMode: FileDialog.SaveFile
+        onAccepted: KAdwSettings.Preset.saveJson(file)
     }
 }

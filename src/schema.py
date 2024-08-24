@@ -5,7 +5,7 @@ class Schema(QObject):
     def __init__(self, parent=None) -> None:
         super().__init__(parent)
 
-    def data(self):
+    def data(self) -> dict[str, list]:
         return {
             "groups": [
                 {
@@ -257,6 +257,11 @@ class Schema(QObject):
                                 "them from the main window."
                             ),
                             "adw_gtk3_support": "yes",
+                        },
+                        {
+                            "name": "headerbar_darker_shade_color",
+                            "title": self.tr("Darker Shade Color"),
+                            "adw_gtk3_support": "no",
                         },
                     ],
                 },

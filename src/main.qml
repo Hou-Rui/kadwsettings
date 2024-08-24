@@ -139,4 +139,11 @@ Kirigami.ApplicationWindow {
             }
         ]
     }
+
+    Connections {
+        target: KAdwSettings.Preset
+        function onErrorHappened(msg: string) {
+            root.showPassiveNotification(msg)
+        }
+    }
 }

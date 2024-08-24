@@ -4,11 +4,9 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
-import backend.kadwsettings as KAdwSettings
+import kadwsettings.backend as KAdwSettings
 import org.kde.kirigami as Kirigami
 import org.kde.kirigamiaddons.formcard as FormCard
-
-import "PresetSchema.js" as PresetSchema
 
 Kirigami.ApplicationWindow {
     id: root
@@ -19,33 +17,14 @@ Kirigami.ApplicationWindow {
 
     pageStack.initialPage: paletteColorsPage
 
-    Kirigami.Action {
-        id: applyAction
-        icon.name: "dialog-ok-apply"
-        text: qsTr("Apply")
-        onTriggered: KAdwSettings.Backend.save()
-    }
-
-    Kirigami.Action {
-        id: loadPresetAction
-        icon.name: "list-add"
-        text: qsTr("Load Preset")
-    }
-
-    Kirigami.Action {
-        id: savePresetAction
-        icon.name: "document-save"
-        text: qsTr("Save Preset")
-    }
-
     FormCard.FormCardPage {
         id: paletteColorsPage
         title: qsTr("Palette Colors")
         visible: false
-        actions: [loadPresetAction, savePresetAction, applyAction]
+        actions: Actions.common
 
         Repeater {
-            model: PresetSchema.data.palette
+            model: KAdwSettings.Preset.schema.palette
 
             ColumnLayout {
                 id: palette
@@ -75,10 +54,10 @@ Kirigami.ApplicationWindow {
         id: namedColorsPage
         title: qsTr("Named Colors")
         visible: false
-        actions: [loadPresetAction, savePresetAction, applyAction]
+        actions: Actions.common
 
         Repeater {
-            model: PresetSchema.data.groups
+            model: KAdwSettings.Preset.schema.groups
 
             ColumnLayout {
                 id: group
@@ -116,7 +95,7 @@ Kirigami.ApplicationWindow {
         id: customStylePage
         title: qsTr("Custom Styles")
         visible: false
-        actions: [loadPresetAction, savePresetAction, applyAction]
+        actions: Actions.common
 
         FormCard.FormHeader {
             title: qsTr("Custom GTK 4 Styles")

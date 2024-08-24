@@ -1,7 +1,7 @@
 {
     "files": [
         "main.py",
-        "backend.py",
+        "preset.py",
         "color.py",
         "main.qml",
         "ColorDelegate.qml",

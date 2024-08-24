@@ -10,7 +10,6 @@ APPL_DIR="$PREFIX/share/applications"
 
 install -Dm 644 src/*.py -t "$SRC_DIR"
 install -Dm 644 src/*.qml -t "$SRC_DIR"
-install -Dm 644 src/*.js -t "$SRC_DIR"
 install -Dm 644 ./*.desktop -t "$APPL_DIR"
 
 for size in icons/*; do

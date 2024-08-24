@@ -4,7 +4,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
-import backend.kadwsettings as KAdwSettings
+import kadwsettings.backend as KAdwSettings
 import org.kde.kirigami as Kirigami
 import org.kde.kirigamiaddons.formcard as FormCard
 
@@ -66,13 +66,13 @@ FormCard.AbstractFormDelegate {
             selectedTextColor: Kirigami.Theme.highlightedTextColor
             selectionColor: Kirigami.Theme.highlightColor
 
-            text: KAdwSettings.Backend.custom
+            text: KAdwSettings.Preset.custom
             textFormat: Text.PlainText
             font.family: "monospace"
             wrapMode: Text.WordWrap
 
             Binding {
-                target: KAdwSettings.Backend
+                target: KAdwSettings.Preset
                 property: "custom"
                 value: codeEdit.text
             }

@@ -1,22 +1,22 @@
-from typing import Any
+from typing import Any, Self
 
 from PySide6.QtCore import Property, QObject, Signal
 from PySide6.QtGui import QColor
 
 
-class BackendBase(QObject):
+class Resolver(QObject):
     def __init__(self, parent=None) -> None:
         super().__init__(parent)
 
-    def resolveColor(self, _: str) -> QColor:
+    def resolve(self, _: str) -> QColor:
         return NotImplemented
 
 
-class ColorRule(QObject):
-    nameChanged: Any = Signal()
-    colorChanged: Any = Signal()
+class Rule(QObject):
+    nameChanged = Signal()
+    colorChanged = Signal()
 
-    def __init__(self, name: str, code: str, parent: BackendBase) -> None:
+    def __init__(self, name: str, code: str, parent: Resolver) -> None:
         super().__init__(parent)
         self._name = name
         self._code = code
@@ -38,4 +38,4 @@ class ColorRule(QObject):
 
     @Property(QColor, notify=colorChanged)
     def color(self) -> QColor:
-        return self._parent.resolveColor(self._code)
+        return self._parent.resolve(self._code)

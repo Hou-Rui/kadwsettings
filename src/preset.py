@@ -28,21 +28,28 @@ class Preset(Resolver, QObject):
     def __init__(self, parent=None) -> None:
         super().__init__(parent)
         self._schema = Schema(self)
+        self._name = self.tr("Unnamed Preset")
         self._rules: dict[str, Rule] = {}
         self._custom: str = ''
+        self._palette: list[str] = []
+        self._shades: int = 0
         self._initRules()
         self.loadCss()
 
     def _initRules(self) -> None:
-        def _genNames(data: dict[str, list]) -> Iterator[str]:
-            for group in data['groups']:
-                for variable in group['variables']:
-                    yield variable['name']
-            for palette in data['palette']:
-                for n in range(1, palette['n_shades'] + 1):
-                    yield f"{palette['prefix']}{n}"
-        for name in _genNames(self._schema.data()):
-            self._rules[name] = Rule(name, 'transparent', self)
+        data = self._schema.data()
+        for group in data['groups']:
+            for variable in group['variables']:
+                name = variable['name']
+                self._rules[name] = Rule(self, name)
+        for palette in data['palette']:
+            prefix: str = palette['prefix']
+            shades: int = palette['n_shades']
+            self._palette.append(prefix)
+            self._shades = max(self._shades, shades)
+            for n in range(1, shades + 1):
+                name = f"{prefix}{n}"
+                self._rules[name] = Rule(self, name, isPalette=True)
 
     @Slot()
     def loadCss(self) -> None:
@@ -93,15 +100,41 @@ class Preset(Resolver, QObject):
                     yield f'{prefix}{n}', code
         try:
             with open(QUrl(path).path(), 'r') as input:
-                for name, code in _genRules(json.load(input)):
+                data = json.load(input)
+                for name, code in _genRules(data):
                     self._rules[name].code = code  # type: ignore
+                if custom := data.get('custom_css'):
+                    if customGtk4 := custom.get('gtk4'):
+                        self._custom = customGtk4
         except (ValueError, KeyError, AssertionError) as e:
             msg = self.tr('Load preset failed: {}'.format(e))
             self.errorHappened.emit(msg)
 
     @Slot(str)
     def saveJson(self, path: str) -> None:
-        pass
+        result = {
+            "name": self._name,
+            "variables": {
+                name: rule._code
+                for name, rule in self._rules.items() if not rule._isPalette
+            },
+            "palette": {
+                prefix: {
+                    str(n): self._rules[f'{prefix}{n}']._code
+                    for n in range(1, self._shades + 1)
+                }
+                for prefix in self._palette
+            },
+            "custom_css": {
+                "gtk4": self._custom
+            },
+        }
+        try:
+            with open(QUrl(path).path(), 'w') as output:
+                json.dump(result, output, indent=2)
+        except (ValueError, KeyError) as e:
+            msg = self.tr('Save preset failed: {}'.format(e))
+            self.errorHappened.emit(msg)
 
     @override
     def resolve(self, code: str) -> QColor:

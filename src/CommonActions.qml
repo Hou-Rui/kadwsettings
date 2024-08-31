@@ -1,5 +1,3 @@
-pragma Singleton
-
 import QtQuick
 import Qt.labs.platform
 
@@ -8,8 +6,12 @@ import org.kde.kirigami as Kirigami
 
 Item {
     id: root
-    readonly property list<Kirigami.Action> common: [apply, loadPreset, savePreset]
-    readonly property list<string> nameFilter: [`${qsTr("Preset files")} (*.json)`, `${qsTr("All files")} (*)`]
+    required property Kirigami.ApplicationWindow window
+    readonly property list<Kirigami.Action> actions: [apply, loadPreset, savePreset]
+    readonly property list<string> nameFilter: [
+        `${qsTr("Preset files")} (*.json)`,
+        `${qsTr("All files")} (*)`,
+    ]
 
     Kirigami.Action {
         id: apply

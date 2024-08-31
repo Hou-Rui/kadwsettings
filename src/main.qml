@@ -14,14 +14,20 @@ Kirigami.ApplicationWindow {
     minimumWidth: 30 * Kirigami.Units.gridUnit
     height: 30 * Kirigami.Units.gridUnit
     visible: true
-
     pageStack.initialPage: paletteColorsPage
+
+    CommonActions {
+        id: commonActions
+        window: root
+    }
+
+    property alias actions: commonActions.actions
 
     FormCard.FormCardPage {
         id: paletteColorsPage
         title: qsTr("Palette Colors")
         visible: false
-        actions: Actions.common
+        actions: root.actions
 
         Repeater {
             model: KAdwSettings.Preset.schema.palette
@@ -54,7 +60,7 @@ Kirigami.ApplicationWindow {
         id: namedColorsPage
         title: qsTr("Named Colors")
         visible: false
-        actions: Actions.common
+        actions: root.actions
 
         Repeater {
             model: KAdwSettings.Preset.schema.groups
@@ -95,7 +101,7 @@ Kirigami.ApplicationWindow {
         id: customStylePage
         title: qsTr("Custom Styles")
         visible: false
-        actions: Actions.common
+        actions: root.actions
 
         FormCard.FormHeader {
             title: qsTr("Custom GTK 4 Styles")

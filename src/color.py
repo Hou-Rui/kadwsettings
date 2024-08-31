@@ -15,12 +15,15 @@ class Resolver(QObject):
 class Rule(QObject):
     nameChanged = Signal()
     colorChanged = Signal()
+    paletteChanged = Signal()
 
-    def __init__(self, name: str, code: str, parent: Resolver) -> None:
+    def __init__(self, parent: Resolver, name: str,
+                 code: str = 'transparent', isPalette: bool = False) -> None:
         super().__init__(parent)
+        self._parent = parent
         self._name = name
         self._code = code
-        self._parent = parent
+        self._isPalette = isPalette
 
     @Property(str, notify=nameChanged)
     def name(self) -> str:
@@ -39,3 +42,7 @@ class Rule(QObject):
     @Property(QColor, notify=colorChanged)
     def color(self) -> QColor:
         return self._parent.resolve(self._code)
+
+    @Property(bool, notify=paletteChanged)
+    def isPalette(self) -> bool:
+        return self._isPalette

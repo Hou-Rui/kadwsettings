@@ -5,7 +5,7 @@
         "color.py",
         "main.qml",
         "ColorDelegate.qml",
-        "CustomStylesDelegate.qml",
-        "PresetSchema.js"
+        "CommonActions.qml",
+        "CustomStylesDelegate.qml"
     ]
 }

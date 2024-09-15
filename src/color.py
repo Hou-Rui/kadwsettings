@@ -1,5 +1,3 @@
-from typing import Any, Self
-
 from PySide6.QtCore import Property, QObject, Signal
 from PySide6.QtGui import QColor
 

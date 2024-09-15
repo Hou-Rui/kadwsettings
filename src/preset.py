@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from typing import Iterator, override
+from typing import Iterator, TextIO, override
 
 from PySide6.QtCore import (Property, QObject, QStandardPaths, QUrl, Signal,
                             Slot)
@@ -21,6 +21,7 @@ PREFIX_INTERNAL = '/* KAdwSettings:'
 @QmlElement
 @QmlSingleton
 class Preset(Resolver, QObject):
+    nameChanged = Signal()
     customChanged = Signal()
     schemaChanged = Signal()
     errorHappened = Signal(str)
@@ -57,6 +58,11 @@ class Preset(Resolver, QObject):
             for raw in config:
                 line = raw.strip()
                 if line.startswith(PREFIX_INTERNAL):
+                    presetPrefix = f'{PREFIX_INTERNAL} Preset:'
+                    if line.startswith(presetPrefix):
+                        self._name = (line.removeprefix(presetPrefix)
+                                          .removesuffix('*/')
+                                          .strip())
                     continue
                 if not line.startswith(PREFIX_DEFINE_COLOR):
                     self._custom += raw
@@ -69,14 +75,21 @@ class Preset(Resolver, QObject):
                     continue
                 self._rules[name].code = code.removesuffix(';')  # type: ignore
 
+    def _writeInternal(self, output: TextIO, text: str) -> None:
+        output.write(f'{PREFIX_INTERNAL} {text} */\n')
+
     @Slot()
     def saveCss(self) -> None:
         with open(self._cssPath(), 'w') as config:
-            config.write(f'{PREFIX_INTERNAL} Named Colors */\n')
+            # preset info
+            self._writeInternal(config, f'Preset: {self.name}')
+            # named colors / palette
+            self._writeInternal(config, 'Named Colors')
             for rule in self._rules.values():
                 line = f'{PREFIX_DEFINE_COLOR} {rule.name} {rule.code};\n'
                 config.write(line)
-            config.write(f'{PREFIX_INTERNAL} Custom Styles */\n')
+            # custom styles
+            self._writeInternal(config, 'Custom Styles')
             config.write(f'{self._custom}\n')
 
     def _cssPath(self) -> Path:
@@ -151,6 +164,14 @@ class Preset(Resolver, QObject):
     def rule(self, name: str) -> Rule | None:
         return self._rules.get(name)
 
+    @Property(str, notify=nameChanged)
+    def name(self) -> str:
+        return self._name
+
+    @name.setter
+    def name(self, newName: str) -> None:
+        self._name = newName
+
     @Property('QVariant', notify=schemaChanged)
     def schema(self) -> dict:
         return self._schema.data()
@@ -160,5 +181,5 @@ class Preset(Resolver, QObject):
         return self._custom
 
     @custom.setter
-    def custom(self, custom: str) -> None:
-        self._custom = custom
+    def custom(self, newCustom: str) -> None:
+        self._custom = newCustom

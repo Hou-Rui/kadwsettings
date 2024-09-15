@@ -8,7 +8,7 @@ SRC_DIR="$PREFIX/share/$PROJECT/src"
 ICON_DIR="$PREFIX/share/icons/hicolor"
 APPL_DIR="$PREFIX/share/applications"
 
-for src_file in src/*.py src/*.qml src/qmldir; do
+for src_file in src/*.py src/*.qml; do
   install -Dm 644 "$src_file" "$SRC_DIR"
 done
 install -Dm 644 ./*.desktop -t "$APPL_DIR"

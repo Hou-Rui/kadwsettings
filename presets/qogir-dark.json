@@ -1,0 +1,118 @@
+{
+  "name": "Qogir Dark",
+  "variables": {
+    "accent_color": "@blue_3",
+    "accent_bg_color": "@blue_4",
+    "accent_fg_color": "@light_1",
+    "destructive_color": "@orange_3",
+    "destructive_bg_color": "@orange_3",
+    "destructive_fg_color": "@dark_3",
+    "success_color": "@green_3",
+    "success_bg_color": "@green_3",
+    "success_fg_color": "@dark_3",
+    "warning_color": "@yellow_3",
+    "warning_bg_color": "@yellow_3",
+    "warning_fg_color": "@dark_3",
+    "error_color": "@red_3",
+    "error_bg_color": "@red_3",
+    "error_fg_color": "@red_3",
+    "window_bg_color": "@dark_5",
+    "window_fg_color": "@light_2",
+    "view_bg_color": "@dark_3",
+    "view_fg_color": "@light_2",
+    "headerbar_bg_color": "@dark_5",
+    "headerbar_fg_color": "@light_2",
+    "headerbar_border_color": "@dark_1",
+    "headerbar_backdrop_color": "@window_bg_color",
+    "headerbar_shade_color": "@dark_1",
+    "headerbar_darker_shade_color": "transparent",
+    "sidebar_bg_color": "@dark_5",
+    "sidebar_fg_color": "@light_2",
+    "sidebar_backdrop_color": "@window_bg_color",
+    "sidebar_shade_color": "@dark_1",
+    "secondary_sidebar_bg_color": "@dark_5",
+    "secondary_sidebar_fg_color": "@light_2",
+    "secondary_sidebar_backdrop_color": "@window_bg_color",
+    "secondary_sidebar_shade_color": "@shade_color",
+    "card_bg_color": "@view_bg_color",
+    "card_fg_color": "@view_fg_color",
+    "card_shade_color": "@shade_color",
+    "thumbnail_bg_color": "@view_bg_color",
+    "thumbnail_fg_color": "@view_fg_color",
+    "dialog_bg_color": "@window_bg_color",
+    "dialog_fg_color": "@window_fg_color",
+    "popover_bg_color": "@window_bg_color",
+    "popover_fg_color": "@window_fg_color",
+    "popover_shade_color": "@shade_color",
+    "shade_color": "@dark_1",
+    "scrollbar_outline_color": "@dark_1"
+  },
+  "palette": {
+    "blue_": {
+      "1": "rgb(143,194,235)",
+      "2": "rgb(111,175,227)",
+      "3": "rgb(82,148,226)",
+      "4": "rgb(59,135,225)",
+      "5": "rgb(32,108,195)"
+    },
+    "green_": {
+      "1": "#d0edbb",
+      "2": "#b4d99a",
+      "3": "#98c379",
+      "4": "#72a150",
+      "5": "#518c26"
+    },
+    "yellow_": {
+      "1": "#fae6c0",
+      "2": "#edd19d",
+      "3": "#e5c07b",
+      "4": "#c29644",
+      "5": "#ba8014"
+    },
+    "orange_": {
+      "1": "rgb(255,190,111)",
+      "2": "rgb(255,163,72)",
+      "3": "rgb(191,82,64)",
+      "4": "rgb(208,92,47)",
+      "5": "rgb(198,70,0)"
+    },
+    "red_": {
+      "1": "rgb(237,168,161)",
+      "2": "rgb(209,115,107)",
+      "3": "rgb(190,80,70)",
+      "4": "rgb(181,52,40)",
+      "5": "rgb(191,26,11)"
+    },
+    "purple_": {
+      "1": "#e6c7f0",
+      "2": "#d39fe3",
+      "3": "#c678dd",
+      "4": "#9f47ba",
+      "5": "#8c1dad"
+    },
+    "brown_": {
+      "1": "#cdab8f",
+      "2": "#b5835a",
+      "3": "#986a44",
+      "4": "#865e3c",
+      "5": "#63452c"
+    },
+    "light_": {
+      "1": "#ffffff",
+      "2": "#dce0e6",
+      "3": "#abb2bf",
+      "4": "#9ba1ab",
+      "5": "#777f8c"
+    },
+    "dark_": {
+      "1": "rgb(63,66,80)",
+      "2": "rgb(49,51,60)",
+      "3": "rgb(49,51,60)",
+      "4": "rgb(49,51,60)",
+      "5": "rgb(39,41,50)"
+    }
+  },
+  "custom_css": {
+    "gtk4": "\nwindow:not(.maximized), window:not(.maximized).background,\nmenu, .menu, .context-menu,\npopover contents, popover arrow, tooltip {\n    border-radius: 5px;\n}\n\ndialog, window, .popup dialog, .popup window, .csd dialog.popup, .csd window.popup {\n  box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.5), 0px 2px 8px rgba(0, 0, 0, 0.3);\n}\n.csd dialog.tooltip, .csd window.tooltip {\n  box-shadow: none;\n}\n.csd dialog.message-dialog, .csd window.message-dialog {\n  box-shadow: 0 2px 6px 1px rgba(0, 0, 0, 0.5);\n}\n\npopover contents, popover arrow {\n    border: 1px solid @dark_1;\n}\n\ntooltip {\n    background-color: @dark_3;\n}\n\nwindowcontrols>button {\n  padding: 0px;\n}\n\nwindowcontrols button image:not(:hover) {\n  background-color: transparent;\n}\n\n.navigation-sidebar, toolbarview {\n  background-color: @dark_5;\n}\n\n"
+  }
+}

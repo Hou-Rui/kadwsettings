@@ -1,4 +1,4 @@
-from PySide6.QtCore import Property, QObject, Signal
+from PySide6.QtCore import Property, QObject, Signal, Slot
 from PySide6.QtGui import QColor
 
 
@@ -22,6 +22,10 @@ class Rule(QObject):
         self._name = name
         self._code = code
         self._isPalette = isPalette
+
+    @Slot()
+    def clear(self) -> None:
+        self.code = 'transparent'  # type: ignore
 
     @Property(str, notify=nameChanged)
     def name(self) -> str:

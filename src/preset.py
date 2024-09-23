@@ -52,6 +52,12 @@ class Preset(Resolver, QObject):
                 name = f"{prefix}{n}"
                 self._rules[name] = Rule(self, name, isPalette=True)
 
+    def _clear(self) -> None:
+        self.name = '' # type: ignore
+        self.custom = '' # type: ignore
+        for rule in self._rules.values():
+            rule.clear()
+
     @Slot()
     def loadCss(self) -> None:
         with open(self._cssPath(), 'r') as config:
@@ -111,14 +117,17 @@ class Preset(Resolver, QObject):
                 for n, code in shades.items():
                     assert isinstance(code, str)
                     yield f'{prefix}{n}', code
+        self._clear()
         try:
             with open(QUrl(path).path(), 'r') as input:
                 data = json.load(input)
+                if name := data.get('name'):
+                    self.name = name
                 for name, code in _genRules(data):
                     self._rules[name].code = code  # type: ignore
                 if custom := data.get('custom_css'):
                     if customGtk4 := custom.get('gtk4'):
-                        self._custom = customGtk4
+                        self.custom = customGtk4
         except (ValueError, KeyError, AssertionError) as e:
             msg = self.tr('Load preset failed: {}'.format(e))
             self.errorHappened.emit(msg)

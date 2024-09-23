@@ -4,6 +4,7 @@
         "preset.py",
         "color.py",
         "main.qml",
+        "AboutPage.qml",
         "ColorDelegate.qml",
         "CommonActions.qml",
         "CustomStylesDelegate.qml"

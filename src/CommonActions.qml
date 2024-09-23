@@ -8,25 +8,52 @@ import org.kde.kirigami as Kirigami
 Item {
     id: root
     required property Kirigami.ApplicationWindow window
-    readonly property list<Kirigami.Action> actions: [changePresetName, apply, loadPreset, savePreset]
     readonly property list<string> nameFilter: [
         `${qsTr("Preset JSON files")} (*.json)`,
-        `${qsTr("All files")} (*)`,
+        `${qsTr("All files")} (*)`
     ]
 
-    Kirigami.Action {
-        id: apply
-        icon.name: "dialog-ok-apply"
-        text: qsTr("Apply")
-        onTriggered: KAdwSettings.Preset.saveCss()
-    }
-
-    Kirigami.Action {
-        id: changePresetName
-        icon.name: "document-edit"
-        text: qsTr("Change Preset Name")
-        onTriggered: changePresetNameDialog.open()
-    }
+    readonly property list<Kirigami.Action> actions: [
+        Kirigami.Action {
+            displayComponent: Label {
+                text: qsTr(`Preset: <b>${KAdwSettings.Preset.name}</b>`)
+                rightPadding: Kirigami.Units.largeSpacing
+            }
+        },
+        Kirigami.Action {
+            icon.name: "dialog-ok-apply"
+            text: qsTr("Apply")
+            onTriggered: KAdwSettings.Preset.saveCss()
+        },
+        Kirigami.Action {
+            icon.name: "document-edit"
+            text: qsTr("Change Preset Name")
+            displayHint: Kirigami.DisplayHint.AlwaysHide
+            onTriggered: changePresetNameDialog.open()
+        },
+        Kirigami.Action {
+            icon.name: "list-add"
+            text: qsTr("Load Preset")
+            displayHint: Kirigami.DisplayHint.AlwaysHide
+            onTriggered: loadPresetDialog.open()
+        },
+        Kirigami.Action {
+            icon.name: "document-save"
+            text: qsTr("Save Preset")
+            displayHint: Kirigami.DisplayHint.AlwaysHide
+            onTriggered: savePresetDialog.open()
+        },
+        Kirigami.Action {
+            separator: true
+            displayHint: Kirigami.DisplayHint.AlwaysHide
+        },
+        Kirigami.Action {
+            icon.name: "help-about"
+            text: qsTr("About")
+            displayHint: Kirigami.DisplayHint.AlwaysHide
+            onTriggered: root.window.pageStack.layers.push(aboutPage)
+        }
+    ]
 
     Kirigami.Dialog {
         id: changePresetNameDialog
@@ -43,25 +70,11 @@ Item {
         onAccepted: KAdwSettings.Preset.name = nameField.text
     }
 
-    Kirigami.Action {
-        id: loadPreset
-        icon.name: "list-add"
-        text: qsTr("Load Preset")
-        onTriggered: loadPresetDialog.open()
-    }
-
     FileDialog {
         id: loadPresetDialog
         title: qsTr("Load Preset File")
         nameFilters: root.nameFilter
         onAccepted: KAdwSettings.Preset.loadJson(file)
-    }
-
-    Kirigami.Action {
-        id: savePreset
-        icon.name: "document-save"
-        text: qsTr("Save Preset")
-        onTriggered: savePresetDialog.open()
     }
 
     FileDialog {
@@ -70,5 +83,9 @@ Item {
         nameFilters: root.nameFilter
         fileMode: FileDialog.SaveFile
         onAccepted: KAdwSettings.Preset.saveJson(file)
+    }
+
+    AboutPage {
+        id: aboutPage
     }
 }

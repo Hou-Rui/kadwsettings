@@ -171,6 +171,7 @@ class Preset(Resolver, QObject):
     @name.setter
     def name(self, newName: str) -> None:
         self._name = newName
+        self.nameChanged.emit()
 
     @Property('QVariant', notify=schemaChanged)
     def schema(self) -> dict:
@@ -183,3 +184,4 @@ class Preset(Resolver, QObject):
     @custom.setter
     def custom(self, newCustom: str) -> None:
         self._custom = newCustom
+        self.customChanged.emit()

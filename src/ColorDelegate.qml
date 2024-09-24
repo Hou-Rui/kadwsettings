@@ -43,8 +43,15 @@ FormCard.AbstractFormDelegate {
             id: codeField
             visible: editCodeButton.checked
             text: root.rule.code
-            Layout.fillWidth: true
+            implicitWidth: editCodeButton.checked ? 10 * Kirigami.Units.gridUnit : 0
             Layout.rightMargin: Kirigami.Units.largeSpacing
+
+            Behavior on implicitWidth {
+                PropertyAnimation {
+                    duration: Kirigami.Units.veryShortDuration
+                }
+            }
+
             Binding {
                 target: root.rule
                 property: 'code'

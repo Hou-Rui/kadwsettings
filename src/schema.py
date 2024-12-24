@@ -1,11 +1,13 @@
+from typing import Any
+
 from PySide6.QtCore import QObject
 
 
 class Schema(QObject):
-    def __init__(self, parent=None) -> None:
+    def __init__(self, parent: QObject | None = None) -> None:
         super().__init__(parent)
 
-    def data(self) -> dict[str, list]:
+    def data(self) -> dict[str, list[Any]]:
         return {
             "groups": [
                 {

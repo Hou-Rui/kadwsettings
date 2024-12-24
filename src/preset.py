@@ -1,15 +1,15 @@
 import json
 from pathlib import Path
-from typing import Iterator, TextIO, override
+from typing import Any, Iterator, TextIO, cast, override
 
-from PySide6.QtCore import (Property, QObject, QStandardPaths, QUrl, Signal,
-                            Slot)
+from PySide6.QtCore import QObject, QStandardPaths, QUrl, Signal, Slot
 from PySide6.QtGui import QColor
 from PySide6.QtQml import QmlElement, QmlSingleton
 from tinycss2.color3 import RGBA, parse_color
 
 from color import Resolver, Rule
 from schema import Schema
+from stubs import Property
 
 QML_IMPORT_NAME = "kadwsettings.backend"
 QML_IMPORT_MAJOR_VERSION = 1
@@ -26,7 +26,7 @@ class Preset(Resolver, QObject):
     schemaChanged = Signal()
     errorHappened = Signal(str)
 
-    def __init__(self, parent=None) -> None:
+    def __init__(self, parent: QObject | None = None) -> None:
         super().__init__(parent)
         self._schema = Schema(self)
         self._name = self.tr("Unnamed Preset")
@@ -53,8 +53,8 @@ class Preset(Resolver, QObject):
                 self._rules[name] = Rule(self, name, isPalette=True)
 
     def _clear(self) -> None:
-        self.name = '' # type: ignore
-        self.custom = '' # type: ignore
+        self.name = ''
+        self.custom = ''
         for rule in self._rules.values():
             rule.clear()
 
@@ -105,17 +105,13 @@ class Preset(Resolver, QObject):
 
     @Slot(str)
     def loadJson(self, path: str) -> None:
-        def _genRules(data) -> Iterator[tuple[str, str]]:
-            assert isinstance(data, dict)
-            assert isinstance(vars := data['variables'], dict)
+        def _genRules(data: dict[str, Any]) -> Iterator[tuple[str, str]]:
+            vars = cast(dict[str, str], data['variables'])
             for name, code in vars.items():
-                assert isinstance(name, str) and isinstance(code, str)
                 yield name, code
-            assert isinstance(palette := data['palette'], dict)
+            palette = cast(dict[str, dict[int, str]], data['palette'])
             for prefix, shades in palette.items():
-                assert isinstance(shades, dict)
                 for n, code in shades.items():
-                    assert isinstance(code, str)
                     yield f'{prefix}{n}', code
         self._clear()
         try:
@@ -137,12 +133,12 @@ class Preset(Resolver, QObject):
         result = {
             "name": self._name,
             "variables": {
-                name: rule._code
-                for name, rule in self._rules.items() if not rule._isPalette
+                name: rule.code
+                for name, rule in self._rules.items() if not rule.isPalette
             },
             "palette": {
                 prefix: {
-                    str(n): self._rules[f'{prefix}{n}']._code
+                    str(n): self._rules[f'{prefix}{n}'].code
                     for n in range(1, self._shades + 1)
                 }
                 for prefix in self._palette
@@ -166,7 +162,7 @@ class Preset(Resolver, QObject):
                 return QColor.fromRgbF(c.red, c.green, c.blue, c.alpha)
             return QColor()
         if next := self._rules.get(code.removeprefix('@')):
-            return self.resolve(next._code)
+            return self.resolve(next.code)
         return QColor()
 
     @Slot(str, result=Rule)
@@ -182,8 +178,8 @@ class Preset(Resolver, QObject):
         self._name = newName
         self.nameChanged.emit()
 
-    @Property('QVariant', notify=schemaChanged)
-    def schema(self) -> dict:
+    @Property(dict, notify=schemaChanged)
+    def schema(self) -> dict[str, list[Any]]:
         return self._schema.data()
 
     @Property(str, notify=customChanged)

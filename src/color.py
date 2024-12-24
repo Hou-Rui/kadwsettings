@@ -1,12 +1,14 @@
-from PySide6.QtCore import Property, QObject, Signal, Slot
+from PySide6.QtCore import QObject, Signal, Slot
 from PySide6.QtGui import QColor
+
+from stubs import Property
 
 
 class Resolver(QObject):
-    def __init__(self, parent=None) -> None:
+    def __init__(self, parent: QObject | None = None) -> None:
         super().__init__(parent)
 
-    def resolve(self, _: str) -> QColor:
+    def resolve(self, code: str) -> QColor:
         return NotImplemented
 
 
